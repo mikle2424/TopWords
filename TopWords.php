@@ -19,14 +19,14 @@ class TopWords {
                 $this->counted(
                     $this->trimmed(
                         $this->lowercased(
-                            $this->exploded()
+                            $this->spaceExploded()
                         )
                     )
                 )
             );
     }
 
-    private function exploded()
+    private function spaceExploded()
     {
         return explode(' ', $this->text);
     }
@@ -75,7 +75,7 @@ class TopWords {
 
 var_dump(
     (new TopWords(
-        "Hello! This is hello+ test text. Word `Hello` must be on the top. 'Hello' or \"Hello\" may be with quotas. But hello5 must not include in HELLo counting. Test text - the second place.",
+        "Hello! This is hello+ test text. Word `Hello` must be on the top. 'Hello' or \"Hello\" may be with quotas.\n But hello5 must not include in HELLo counting. Test text - the second place.",
         5
     ))
         ->list()
