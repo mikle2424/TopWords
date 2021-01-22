@@ -16,11 +16,13 @@ class TopWords {
     {
         return
             $this->sliced(
-                $this->counted(
-                    $this->trimmed(
-                        $this->lowerCased(
-                            $this->spaceExploded(
-                                $this->text
+                $this->sorted(
+                    $this->counted(
+                        $this->trimmed(
+                            $this->lowerCased(
+                                $this->spaceExploded(
+                                    $this->text
+                                )
                             )
                         )
                     )
@@ -57,11 +59,17 @@ class TopWords {
             array_reduce(
                 $input,
                 function (array $carry, string $word) {
-                    $carry[$word]++;
+                    $carry[$word] = isset($carry[$word]) ? $carry[$word] + 1 : 1;
                     return $carry;
                 },
                 []
             );
+    }
+
+    private function sorted(array $input): array
+    {
+        arsort($input);
+        return $input;
     }
 
     private function sliced(array $input): array
@@ -75,10 +83,28 @@ class TopWords {
     }
 }
 
-var_dump(
+$result =
     (new TopWords(
-        "Hello! This is hello+ test text. Word `Hello` must be on the top. 'Hello' or \"Hello\" may be with quotas.\n But hello5 must not include in HELLo counting. Test text - the second place.",
+        "Hello! This is hello+ test text. Word `Hello` must be on the top. 'Hello' or \"Hello\" may be with quotas.\n But hello5 must not include in HELLo counting. Test test text - the second place.",
         5
     ))
-        ->list()
+        ->list();
+
+assertEquals(
+    [
+        'hello' => 6,
+        'test' => 3,
+        'text' => 2,
+        'must' => 2,
+        'be' => 2,
+    ],
+    $result
 );
+
+var_dump($result);
+
+function assertEquals(array $expectedResult, array $actualResult) {
+    if ($expectedResult != $actualResult) {
+        throw new Exception('Assertation failed');
+    }
+}
