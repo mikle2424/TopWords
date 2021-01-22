@@ -18,20 +18,22 @@ class TopWords {
             $this->sliced(
                 $this->counted(
                     $this->trimmed(
-                        $this->lowercased(
-                            $this->spaceExploded()
+                        $this->lowerCased(
+                            $this->spaceExploded(
+                                $this->text
+                            )
                         )
                     )
                 )
             );
     }
 
-    private function spaceExploded()
+    private function spaceExploded(string $text): array
     {
-        return explode(' ', $this->text);
+        return explode(' ', $text);
     }
 
-    private function lowercased(array $input)
+    private function lowerCased(array $input): array
     {
         return
             array_map(
@@ -40,7 +42,7 @@ class TopWords {
             );
     }
 
-    private function trimmed(array $input)
+    private function trimmed(array $input): array
     {
         return
             array_map(
